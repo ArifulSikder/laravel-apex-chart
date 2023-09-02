@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class OrderSeeder extends Seeder
 {
@@ -13,9 +15,9 @@ class OrderSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             // Get the current year
-            $currentYear = Carbon::now()->year;
+            $currentYear = Carbon::now()->year -1;
 
             // Create a Carbon instance for the first day of the current year
             $startDate = Carbon::create($currentYear, 1, 1, 0, 0, 0);

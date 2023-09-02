@@ -20,7 +20,12 @@
 <body class="antialiased">
     <div class="container">
         <div class="row">
-            <div class="col-md-12" id="chart"></div>
+            <h1>Bar With Line Chart</h1>
+            <div class="col-md-12" id="barChart"></div>
+            <h1>Area Chart</h1>
+            <div class="col-md-12" id="lineChart"></div>
+            <h1>Pie Chart</h1>
+            <div class="col-md-12" id="pieChart"></div>
         </div>
     </div>
 </body>
@@ -32,72 +37,148 @@
     var colors = ['#F44336', '#E91E63', '#9C27B0', '#28a745', '#ffc107', '#17a2b8',
         '#9C27B0'
     ];
-    var options = {
-
-        series: [{
-            name: 'Net Profit',
-            data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-        }],
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
+      var options = {
+            series: [{
+                name: 'Monthly Orders Amount',
+                type: 'column',
+                data: [<?php
+                    if ($monthlyOrderTk) {
+                        foreach ($monthlyOrderTk as $row => $value) {
+                            echo '"' . $value . '",';
+                        }
+                    } ?>]
+            }, {
+                name: 'Monthly Orders Percentage',
+                type: 'line',
+                data: [<?php
+                    if ($monthlyOrderPercentage) {
+                        foreach ($monthlyOrderPercentage as $row => $value) {
+                            echo '"' . $value . '",';
+                        }
+                    } ?>]
+            }],
+            chart: {
+                height: 350,
+                type: 'line',
             },
+            stroke: {
+                width: [0, 4]
+            },
+            title: {
+                text: 'Order Report Chart'
+            },
+            dataLabels: {
+                enabled: true,
+                enabledOnSeries: [1]
+            },
+            labels: [<?php
+            if ($monthlyOrderTk) {
+                foreach ($monthlyOrderTk as $row => $value) {
+                    echo '"' . \Carbon\Carbon::parse($row)->format('F') . '",';
+                }
+            } ?>],
+            xaxis: {
+                // type: 'datetime'
+            },
+            yaxis: [{
+                title: {
+                    text: 'Monthly Orders Amount',
+                },
+
+            }, {
+                opposite: true,
+                title: {
+                    text: 'Monthly Orders Percentage'
+                }
+            }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#barChart"), options);
+        chart.render();
+</script>
+
+<script>
+    var options = {
+          series: [{
+          name: 'Current Year Order',
+          data: [<?php
+                    if ($monthlyOrderTk) {
+                        foreach ($monthlyOrderTk as $row => $value) {
+                            echo '"' . $value . '",';
+                        }
+                    } ?>]
+        }, {
+          name: 'Previous Year Order',
+          data: [<?php
+                    if ($monthlyOrderTkForPreviousYear) {
+                        foreach ($monthlyOrderTkForPreviousYear as $row => $value) {
+                            echo '"' . $value . '",';
+                        }
+                    } ?>]
+        }],
+          chart: {
+          height: 350,
+          type: 'area'
         },
         dataLabels: {
-            enabled: false
+          enabled: false
         },
-        colors: colors,
         stroke: {
-            show: true,
-            width: 2,
-            colors: colors
-        },
-        labels: {
-            style: {
-                colors: colors,
-                fontSize: '12px'
-            }
+          curve: 'smooth'
         },
         xaxis: {
-            categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-            labels: {
-                style: {
-                    colors: colors,
-                    fontSize: '12px'
+          categories: [<?php
+            if ($monthlyOrderTkForPreviousYear) {
+                foreach ($monthlyOrderTkForPreviousYear as $row => $value) {
+                    echo '"' . \Carbon\Carbon::parse($row)->format('F') . '",';
                 }
-            }
-        },
-        yaxis: {
-            title: {
-                text: '$ (thousands)'
-            },
-              labels: {
-                style: {
-                    colors: colors,
-                    fontSize: '12px'
-                }
-            }
-        },
-        fill: {
-            opacity: 1
+            } ?>]
         },
         tooltip: {
-            y: {
-                formatter: function(val) {
-                    return "$ " + val + " thousands"
-                }
-            }
-        }
-    };
+          x: {
+            format: 'dd/MM/yy HH:mm'
+          },
+        },
+        };
 
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
+        var chart = new ApexCharts(document.querySelector("#lineChart"), options);
+        chart.render();
+          
+</script>
+
+<script>
+    var options = {
+          series: [<?php
+                    if ($monthlyOrderPercentage) {
+                        foreach ($monthlyOrderPercentage as $row => $value) {
+                            echo '' . $value . ',';
+                        }
+                    } ?>],
+          chart: {
+          width: 380,
+          type: 'pie',
+        },
+        labels: [<?php
+            if ($monthlyOrderTk) {
+                foreach ($monthlyOrderTk as $row => $value) {
+                    echo '"' . \Carbon\Carbon::parse($row)->format('F') . '",';
+                }
+            } ?>],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#pieChart"), options);
+        chart.render();    
 </script>
 
 </html>
