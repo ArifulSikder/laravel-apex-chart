@@ -27,6 +27,8 @@ For run your project simply run the following command.
 
 Opps! You got some database related errors. You you need to make database connection. Connect to the database and from the projects main directory, there is a folder called "sql". From this folder import database called "chart.sql".
 
+After import database you will get the charts. 
+
 
 ## Contact:
 If you have any issues, please contact me by sending message:
